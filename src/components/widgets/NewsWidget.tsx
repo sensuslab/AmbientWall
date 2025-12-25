@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import type { NewsItem } from '../../types';
+import type { NewsItem, WidgetComponentProps } from '../../types';
 
 const defaultNews: Omit<NewsItem, 'id' | 'created_at'>[] = [
   { headline: 'Technology reshapes the future of ambient computing', source: 'TechReview', url: null, priority: 1, active: true },
@@ -10,7 +10,7 @@ const defaultNews: Omit<NewsItem, 'id' | 'created_at'>[] = [
   { headline: 'Art exhibition showcases digital renaissance', source: 'ArtWorld', url: null, priority: 5, active: true },
 ];
 
-export function NewsWidget() {
+export function NewsWidget({ isAmbient }: WidgetComponentProps) {
   const [news, setNews] = useState<NewsItem[]>([]);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export function NewsWidget() {
 
   return (
     <div className="glass-panel-light py-4 w-[90vw] max-w-[1400px] overflow-hidden news-strip">
-      <div className="flex animate-scroll-news">
+      <div className={`flex ${isAmbient ? '' : 'animate-scroll-news'}`}>
         {duplicatedNews.map((item, index) => (
           <div
             key={`${item.id}-${index}`}

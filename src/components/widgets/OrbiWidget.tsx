@@ -1,30 +1,30 @@
 import { useState, useEffect } from 'react';
+import type { WidgetComponentProps } from '../../types';
 
 type OrbStatus = 'calm' | 'active' | 'alert';
 
-const statusColors: Record<OrbStatus, { outer: string; inner: string; glow: string }> = {
+const statusColors: Record<OrbStatus, { gradient: string; glow: string }> = {
   calm: {
-    outer: 'from-cyan-400/80 to-teal-500/60',
-    inner: 'from-white/60 via-cyan-200/30 to-transparent',
+    gradient: 'radial-gradient(circle at 30% 30%, rgba(100, 181, 198, 0.8), rgba(78, 205, 196, 0.6))',
     glow: 'rgba(100, 181, 198, 0.4)',
   },
   active: {
-    outer: 'from-emerald-400/80 to-cyan-500/60',
-    inner: 'from-white/60 via-emerald-200/30 to-transparent',
+    gradient: 'radial-gradient(circle at 30% 30%, rgba(78, 205, 196, 0.8), rgba(100, 181, 198, 0.6))',
     glow: 'rgba(78, 205, 196, 0.5)',
   },
   alert: {
-    outer: 'from-rose-400/80 to-orange-400/60',
-    inner: 'from-white/60 via-rose-200/30 to-transparent',
+    gradient: 'radial-gradient(circle at 30% 30%, rgba(255, 107, 107, 0.8), rgba(255, 180, 100, 0.6))',
     glow: 'rgba(255, 107, 107, 0.5)',
   },
 };
 
-export function OrbiWidget() {
+export function OrbiWidget({ isAmbient }: WidgetComponentProps) {
   const [status, setStatus] = useState<OrbStatus>('calm');
   const [pulse, setPulse] = useState(false);
 
   useEffect(() => {
+    if (isAmbient) return;
+
     const statusInterval = setInterval(() => {
       const statuses: OrbStatus[] = ['calm', 'active', 'alert'];
       const weights = [0.7, 0.2, 0.1];
@@ -48,35 +48,35 @@ export function OrbiWidget() {
       clearInterval(statusInterval);
       clearInterval(pulseInterval);
     };
-  }, []);
+  }, [isAmbient]);
 
   const colors = statusColors[status];
 
   return (
     <div className="relative">
       <div
-        className={`w-40 h-40 rounded-full bg-gradient-radial ${colors.outer} transition-all duration-1000 ease-in-out`}
+        className="w-40 h-40 rounded-full transition-all duration-1000 ease-in-out"
         style={{
-          background: `radial-gradient(circle at 30% 30%, var(--tw-gradient-from), var(--tw-gradient-to))`,
+          background: colors.gradient,
           boxShadow: `
-            0 0 ${pulse ? '80px' : '60px'} ${colors.glow},
+            0 0 ${pulse && !isAmbient ? '80px' : '60px'} ${colors.glow},
             inset 0 -20px 40px rgba(0, 0, 0, 0.1),
             inset 0 20px 40px rgba(255, 255, 255, 0.3)
           `,
         }}
       >
         <div
-          className={`absolute inset-0 rounded-full bg-gradient-radial ${colors.inner}`}
+          className="absolute inset-0 rounded-full"
           style={{
-            background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), transparent 60%)`,
+            background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), transparent 60%)',
           }}
         />
         <div
           className={`absolute inset-4 rounded-full transition-transform duration-1000 ${
-            pulse ? 'scale-105' : 'scale-100'
+            pulse && !isAmbient ? 'scale-105' : 'scale-100'
           }`}
           style={{
-            background: `radial-gradient(circle at 40% 40%, rgba(255,255,255,0.3), transparent 50%)`,
+            background: 'radial-gradient(circle at 40% 40%, rgba(255,255,255,0.3), transparent 50%)',
           }}
         />
       </div>

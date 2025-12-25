@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import type { StatusItem } from '../../types';
+import type { StatusItem, WidgetComponentProps } from '../../types';
 
 const defaultStatusItems: Omit<StatusItem, 'id' | 'created_at' | 'updated_at'>[] = [
   { name: 'Home', status: 'online', color: null, x: 0, y: 0 },
@@ -17,7 +17,7 @@ const statusColors: Record<string, string> = {
   offline: '#9CA3AF',
 };
 
-export function StatusDotsWidget() {
+export function StatusDotsWidget({ isAmbient }: WidgetComponentProps) {
   const [items, setItems] = useState<StatusItem[]>([]);
 
   useEffect(() => {
@@ -63,18 +63,20 @@ export function StatusDotsWidget() {
           >
             <div
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                isActive ? 'animate-pulse-slow' : ''
+                isActive && !isAmbient ? 'animate-pulse-slow' : ''
               }`}
               style={{
                 backgroundColor: color,
                 boxShadow: `0 0 ${isActive ? '16px' : '8px'} ${color}`,
               }}
             />
-            <div className="absolute left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <div className="glass-panel-light px-2 py-1 text-xs font-light text-gray-600/80 whitespace-nowrap">
-                {item.name}
+            {!isAmbient && (
+              <div className="absolute left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="glass-panel-light px-2 py-1 text-xs font-light text-gray-600/80 whitespace-nowrap">
+                  {item.name}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         );
       })}

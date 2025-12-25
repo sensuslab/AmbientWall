@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Bell, Calendar, AlertCircle, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import type { Notification } from '../../types';
+import type { Notification, WidgetComponentProps } from '../../types';
 
 const defaultNotifications: Omit<Notification, 'id' | 'created_at'>[] = [
   { title: 'Welcome', message: 'Your ambient dashboard is ready', type: 'info', read: false, expires_at: null },
@@ -21,7 +21,7 @@ const typeColors = {
   alert: 'text-rose-600/70',
 };
 
-export function NotificationsWidget() {
+export function NotificationsWidget({ isAmbient }: WidgetComponentProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
@@ -66,11 +66,11 @@ export function NotificationsWidget() {
         return (
           <div
             key={notification.id}
-            className="notification-card w-64 animate-slide-in group"
+            className={`notification-card w-64 group ${isAmbient ? '' : 'animate-slide-in'}`}
             style={{
               marginLeft: `${offset}px`,
               zIndex: zOffset,
-              animationDelay: `${index * 100}ms`,
+              animationDelay: isAmbient ? '0ms' : `${index * 100}ms`,
             }}
           >
             <div className="flex items-start gap-3">
@@ -83,12 +83,14 @@ export function NotificationsWidget() {
                   {notification.message}
                 </div>
               </div>
-              <button
-                onClick={() => dismissNotification(notification.id)}
-                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-white/30 rounded"
-              >
-                <X className="w-3 h-3 text-gray-500/60" />
-              </button>
+              {!isAmbient && (
+                <button
+                  onClick={() => dismissNotification(notification.id)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-white/30 rounded"
+                >
+                  <X className="w-3 h-3 text-gray-500/60" />
+                </button>
+              )}
             </div>
           </div>
         );

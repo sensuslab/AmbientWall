@@ -1,16 +1,21 @@
 import { useState } from 'react';
+import { useAppMode } from './hooks/useAppMode';
 import { useWidgetPositions } from './hooks/useWidgetPositions';
+import { useScenes } from './hooks/useScenes';
 import { WidgetWrapper } from './components/WidgetWrapper';
 import { EditModeControls } from './components/EditModeControls';
+import { AddWidgetPalette } from './components/AddWidgetPalette';
+import { BackgroundLayer } from './components/BackgroundLayer';
+import { ModeIndicator } from './components/ModeIndicator';
 import { TimeWidget } from './components/widgets/TimeWidget';
 import { OrbiWidget } from './components/widgets/OrbiWidget';
 import { WeatherWidget } from './components/widgets/WeatherWidget';
 import { NewsWidget } from './components/widgets/NewsWidget';
 import { NotificationsWidget } from './components/widgets/NotificationsWidget';
 import { StatusDotsWidget } from './components/widgets/StatusDotsWidget';
-import type { WidgetType } from './types';
+import type { WidgetType, WidgetComponentProps } from './types';
 
-const widgetComponents: Record<WidgetType, React.ComponentType> = {
+const widgetComponents: Record<string, React.ComponentType<WidgetComponentProps>> = {
   time: TimeWidget,
   orb: OrbiWidget,
   weather: WeatherWidget,
@@ -20,8 +25,18 @@ const widgetComponents: Record<WidgetType, React.ComponentType> = {
 };
 
 function App() {
-  const [editMode, setEditMode] = useState(false);
-  const { positions, loading, updatePosition, updateVisibility, bringToFront } = useWidgetPositions();
+  const [showAddWidget, setShowAddWidget] = useState(false);
+  const { mode, isAmbient, toggleEdit } = useAppMode();
+  const { scenes, activeScene, switchScene } = useScenes();
+  const {
+    widgets,
+    loading,
+    updatePosition,
+    updateVisibility,
+    bringToFront,
+    addWidget,
+    removeWidget,
+  } = useWidgetPositions(activeScene?.id);
 
   if (loading) {
     return (
@@ -31,38 +46,57 @@ function App() {
     );
   }
 
+  const handleAddWidget = async (type: WidgetType) => {
+    await addWidget(type, activeScene?.id);
+  };
+
   return (
-    <div className="min-h-screen bg-white overflow-hidden relative">
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to left, rgba(245, 245, 245, 0.3) 0%, transparent 40%)',
-        }}
+    <div className={`min-h-screen overflow-hidden relative ${mode}-mode`}>
+      <BackgroundLayer
+        mode={activeScene?.background_mode || 'white'}
+        value={activeScene?.background_value}
       />
 
-      {positions.map((widget) => {
-        const WidgetComponent = widgetComponents[widget.widget_type as WidgetType];
+      {widgets.map((widget) => {
+        const WidgetComponent = widgetComponents[widget.widget_type];
         if (!WidgetComponent) return null;
 
         return (
           <WidgetWrapper
             key={widget.id}
             widget={widget}
+            mode={mode}
             onPositionChange={updatePosition}
             onBringToFront={bringToFront}
-            editMode={editMode}
+            onRemove={removeWidget}
           >
-            <WidgetComponent />
+            <WidgetComponent
+              settings={widget.settings}
+              isAmbient={isAmbient}
+            />
           </WidgetWrapper>
         );
       })}
 
       <EditModeControls
-        editMode={editMode}
-        onToggleEdit={() => setEditMode(!editMode)}
-        widgets={positions}
+        mode={mode}
+        onToggleEdit={toggleEdit}
+        onOpenAddWidget={() => setShowAddWidget(true)}
+        widgets={widgets}
+        scenes={scenes}
+        activeScene={activeScene}
         onToggleVisibility={updateVisibility}
+        onSwitchScene={switchScene}
       />
+
+      <ModeIndicator mode={mode} />
+
+      {showAddWidget && (
+        <AddWidgetPalette
+          onClose={() => setShowAddWidget(false)}
+          onAddWidget={handleAddWidget}
+        />
+      )}
     </div>
   );
 }

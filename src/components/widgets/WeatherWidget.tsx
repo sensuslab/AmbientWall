@@ -1,4 +1,5 @@
 import { Sun, Cloud, CloudRain, CloudSnow, Wind } from 'lucide-react';
+import type { WidgetComponentProps } from '../../types';
 
 interface WeatherDay {
   day: string;
@@ -27,7 +28,7 @@ const mockWeather: { current: { temp: number; condition: keyof typeof weatherIco
   ],
 };
 
-export function WeatherWidget() {
+export function WeatherWidget({ isAmbient }: WidgetComponentProps) {
   const CurrentIcon = weatherIcons[mockWeather.current.condition];
 
   return (
@@ -39,7 +40,7 @@ export function WeatherWidget() {
             strokeWidth={1.5}
           />
           <div
-            className="absolute inset-0 blur-xl opacity-40"
+            className={`absolute inset-0 blur-xl ${isAmbient ? 'opacity-30' : 'opacity-40'}`}
             style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.6) 0%, transparent 70%)' }}
           />
         </div>

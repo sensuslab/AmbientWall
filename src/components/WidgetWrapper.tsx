@@ -1,22 +1,40 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+import { Trash2, Settings } from 'lucide-react';
 import { useDrag } from '../hooks/useDrag';
-import type { WidgetPosition } from '../types';
+import type { WidgetInstance, ElevationLevel, AppMode } from '../types';
 
 interface WidgetWrapperProps {
-  widget: WidgetPosition;
+  widget: WidgetInstance;
   children: ReactNode;
+  mode: AppMode;
   onPositionChange: (id: string, x: number, y: number) => void;
   onBringToFront: (id: string) => void;
-  editMode: boolean;
+  onRemove?: (id: string) => void;
+  onOpenSettings?: (id: string) => void;
 }
+
+const ELEVATION_CLASSES: Record<ElevationLevel, string> = {
+  'surface': 'elevation-surface',
+  'raised-1': 'elevation-raised-1',
+  'raised-2': 'elevation-raised-2',
+  'raised-3': 'elevation-raised-3',
+  'raised-4': 'elevation-raised-4',
+  'floating': 'elevation-floating',
+};
 
 export function WidgetWrapper({
   widget,
   children,
+  mode,
   onPositionChange,
   onBringToFront,
-  editMode,
+  onRemove,
+  onOpenSettings,
 }: WidgetWrapperProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const isEditMode = mode === 'edit';
+  const isAmbientMode = mode === 'ambient';
+
   const { position, isDragging, handleMouseDown } = useDrag({
     initialX: widget.x,
     initialY: widget.y,
@@ -26,20 +44,57 @@ export function WidgetWrapper({
 
   if (!widget.visible) return null;
 
+  const elevationClass = ELEVATION_CLASSES[widget.elevation] || ELEVATION_CLASSES['raised-1'];
+
   return (
     <div
-      className={`absolute transition-all duration-200 ${
-        editMode ? 'widget-draggable' : ''
-      } ${isDragging ? 'widget-dragging' : ''}`}
+      className={`widget-container gpu-accelerated ${elevationClass} ${
+        isEditMode ? 'widget-draggable' : ''
+      } ${isDragging ? 'widget-dragging' : ''} ${
+        isHovered && isEditMode ? 'widget-lift' : ''
+      } ${isAmbientMode ? 'pause-animations' : ''}`}
       style={{
         left: `${position.x}%`,
         top: `${position.y}%`,
-        zIndex: widget.z_index,
+        zIndex: isDragging ? 1000 : widget.z_index,
       }}
-      onMouseDown={editMode ? handleMouseDown : undefined}
+      onMouseDown={isEditMode ? handleMouseDown : undefined}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {editMode && (
-        <div className="absolute -inset-2 border-2 border-dashed border-gray-300/50 rounded-3xl pointer-events-none" />
+      {isEditMode && (
+        <>
+          <div className="absolute -inset-3 border-2 border-dashed border-gray-300/40 rounded-3xl pointer-events-none transition-opacity duration-200" />
+
+          <div
+            className={`widget-controls absolute -top-10 left-1/2 -translate-x-1/2 flex gap-1 transition-opacity duration-200 ${
+              isHovered ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            {onOpenSettings && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenSettings(widget.id);
+                }}
+                className="p-1.5 rounded-lg glass-panel-light hover:bg-white/50 transition-colors"
+              >
+                <Settings className="w-3.5 h-3.5 text-gray-500" />
+              </button>
+            )}
+            {onRemove && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRemove(widget.id);
+                }}
+                className="p-1.5 rounded-lg glass-panel-light hover:bg-rose-100/50 transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-gray-500 hover:text-rose-500" />
+              </button>
+            )}
+          </div>
+        </>
       )}
       {children}
     </div>

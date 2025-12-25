@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import type { WidgetComponentProps } from '../../types';
 
-export function TimeWidget() {
+export function TimeWidget({ isAmbient }: WidgetComponentProps) {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -20,10 +21,10 @@ export function TimeWidget() {
   const dateString = time.toLocaleDateString('en-US', dateOptions);
 
   return (
-    <div className="glass-panel-light px-10 py-8 animate-breathe">
+    <div className={`glass-panel-light px-10 py-8 ${isAmbient ? '' : 'animate-breathe'}`}>
       <div className="flex items-baseline gap-2">
         <span className="time-numeral text-8xl text-gray-800/90">{hours}</span>
-        <span className="time-numeral text-7xl text-gray-600/70 animate-pulse-slow">:</span>
+        <span className={`time-numeral text-7xl text-gray-600/70 ${isAmbient ? '' : 'animate-pulse-slow'}`}>:</span>
         <span className="time-numeral text-8xl text-gray-800/90">{minutes}</span>
         <span className="time-numeral text-4xl text-gray-500/60 ml-2">{seconds}</span>
       </div>
