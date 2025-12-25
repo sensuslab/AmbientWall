@@ -1,4 +1,4 @@
-import { X, Clock, Circle, Cloud, Newspaper, Bell, Activity } from 'lucide-react';
+import { X, Clock, Circle, Cloud, Newspaper, Bell, Activity, FileText, Image } from 'lucide-react';
 import type { WidgetType } from '../types';
 
 interface AddWidgetPaletteProps {
@@ -9,8 +9,10 @@ interface AddWidgetPaletteProps {
 const AVAILABLE_WIDGETS: { type: WidgetType; name: string; description: string; icon: React.ComponentType<{ className?: string; strokeWidth?: number }> }[] = [
   { type: 'time', name: 'Time', description: 'Sculptural time display', icon: Clock },
   { type: 'orb', name: 'Status Orb', description: 'Ambient status indicator', icon: Circle },
-  { type: 'weather', name: 'Weather', description: 'Current conditions', icon: Cloud },
-  { type: 'news', name: 'News Strip', description: 'Rotating headlines', icon: Newspaper },
+  { type: 'weather', name: 'Weather', description: 'Live weather data', icon: Cloud },
+  { type: 'news', name: 'News', description: 'Live news rotation', icon: Newspaper },
+  { type: 'grounded_brief', name: 'Daily Brief', description: 'News summary', icon: FileText },
+  { type: 'photo', name: 'Photo', description: 'Photo slideshow', icon: Image },
   { type: 'notifications', name: 'Notifications', description: 'Floating alert cards', icon: Bell },
   { type: 'status_dots', name: 'Status Dots', description: 'Service indicators', icon: Activity },
 ];

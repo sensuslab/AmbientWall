@@ -13,6 +13,8 @@ import { WeatherWidget } from './components/widgets/WeatherWidget';
 import { NewsWidget } from './components/widgets/NewsWidget';
 import { NotificationsWidget } from './components/widgets/NotificationsWidget';
 import { StatusDotsWidget } from './components/widgets/StatusDotsWidget';
+import { GroundedBriefWidget } from './components/widgets/GroundedBriefWidget';
+import { PhotoWidget } from './components/widgets/PhotoWidget';
 import type { WidgetType, WidgetComponentProps } from './types';
 
 const widgetComponents: Record<string, React.ComponentType<WidgetComponentProps>> = {
@@ -22,6 +24,8 @@ const widgetComponents: Record<string, React.ComponentType<WidgetComponentProps>
   news: NewsWidget,
   notifications: NotificationsWidget,
   status_dots: StatusDotsWidget,
+  grounded_brief: GroundedBriefWidget,
+  photo: PhotoWidget,
 };
 
 function App() {

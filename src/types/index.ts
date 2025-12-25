@@ -1,5 +1,16 @@
 import type { ComponentType } from 'react';
 
+export type {
+  LiveNewsItem,
+  WeatherData,
+  WeatherForecast,
+  GroundedBrief,
+  PhotoData,
+  CachedData,
+  DataSourceConfig,
+  ApiResponse,
+} from './data';
+
 export type ElevationLevel = 'surface' | 'raised-1' | 'raised-2' | 'raised-3' | 'raised-4' | 'floating';
 
 export type WidgetCategory = 'time' | 'status' | 'information' | 'media' | 'interactive' | 'embed';
