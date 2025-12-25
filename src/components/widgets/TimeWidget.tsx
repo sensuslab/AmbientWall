@@ -21,15 +21,32 @@ export function TimeWidget({ isAmbient }: WidgetComponentProps) {
   const dateString = time.toLocaleDateString('en-US', dateOptions);
 
   return (
-    <div className={`glass-panel-light px-10 py-8 ${isAmbient ? '' : 'animate-breathe'}`}>
-      <div className="flex items-baseline gap-2">
-        <span className="time-numeral text-8xl text-gray-800/90">{hours}</span>
-        <span className={`time-numeral text-7xl text-gray-600/70 ${isAmbient ? '' : 'animate-pulse-slow'}`}>:</span>
-        <span className="time-numeral text-8xl text-gray-800/90">{minutes}</span>
-        <span className="time-numeral text-4xl text-gray-500/60 ml-2">{seconds}</span>
-      </div>
-      <div className="mt-4 text-gray-600/80 font-light text-lg tracking-wide">
-        {dateString}
+    <div className={`relative px-12 py-10 rounded-3xl ${isAmbient ? '' : 'animate-breathe'}`}>
+      <div className="absolute inset-0 bg-white/25 backdrop-blur-glass rounded-3xl border border-white/40" style={{
+        boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 32px rgba(0, 0, 0, 0.06)'
+      }} />
+      <div className="relative">
+        <div className="flex items-baseline gap-2">
+          <span className="font-extralight text-[5.5rem] leading-none tracking-tight text-gray-800/90" style={{
+            textShadow: '0 4px 24px rgba(0, 0, 0, 0.06)'
+          }}>
+            {hours}
+          </span>
+          <span className={`font-extralight text-6xl text-gray-500/50 ${isAmbient ? '' : 'animate-pulse-gentle'}`}>
+            :
+          </span>
+          <span className="font-extralight text-[5.5rem] leading-none tracking-tight text-gray-800/90" style={{
+            textShadow: '0 4px 24px rgba(0, 0, 0, 0.06)'
+          }}>
+            {minutes}
+          </span>
+          <span className="font-light text-3xl text-gray-400/50 ml-3 self-end mb-3">
+            {seconds}
+          </span>
+        </div>
+        <div className="mt-5 text-gray-500/70 font-light text-lg tracking-wide">
+          {dateString}
+        </div>
       </div>
     </div>
   );

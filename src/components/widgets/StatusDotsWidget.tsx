@@ -12,9 +12,9 @@ const defaultStatusItems: Omit<StatusItem, 'id' | 'created_at' | 'updated_at'>[]
 
 const statusColors: Record<string, string> = {
   online: '#4ECDC4',
-  away: '#FFE66D',
-  busy: '#FF6B6B',
-  offline: '#9CA3AF',
+  away: '#F59E0B',
+  busy: '#EF4444',
+  offline: '#94A3B8',
 };
 
 export function StatusDotsWidget({ isAmbient }: WidgetComponentProps) {
@@ -41,39 +41,43 @@ export function StatusDotsWidget({ isAmbient }: WidgetComponentProps) {
     }
   }
 
+  const positions = [
+    { x: 10, y: 15 },
+    { x: 55, y: 5 },
+    { x: 90, y: 25 },
+    { x: 30, y: 65 },
+    { x: 75, y: 55 },
+  ];
+
   return (
-    <div className="relative w-40 h-32">
+    <div className="relative w-36 h-28">
       {items.map((item, index) => {
         const color = item.color || statusColors[item.status];
         const isActive = item.status === 'online' || item.status === 'busy';
-        const positions = [
-          { x: 0, y: 10 },
-          { x: 50, y: 0 },
-          { x: 100, y: 20 },
-          { x: 30, y: 70 },
-          { x: 80, y: 60 },
-        ];
         const pos = positions[index % positions.length];
 
         return (
           <div
             key={item.id}
-            className="absolute group"
+            className="absolute group transform -translate-x-1/2 -translate-y-1/2"
             style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
           >
             <div
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                isActive && !isAmbient ? 'animate-pulse-slow' : ''
+              className={`w-3 h-3 rounded-full transition-all duration-500 ${
+                isActive && !isAmbient ? 'animate-pulse-gentle' : ''
               }`}
               style={{
                 backgroundColor: color,
-                boxShadow: `0 0 ${isActive ? '16px' : '8px'} ${color}`,
+                boxShadow: `0 0 ${isActive ? '14px' : '6px'} ${color}60`,
               }}
             />
             {!isAmbient && (
-              <div className="absolute left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="glass-panel-light px-2 py-1 text-xs font-light text-gray-600/80 whitespace-nowrap">
-                  {item.name}
+              <div className="absolute left-1/2 -translate-x-1/2 mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                <div className="relative px-2.5 py-1 rounded-lg whitespace-nowrap">
+                  <div className="absolute inset-0 bg-white/40 backdrop-blur-glass rounded-lg border border-white/50" style={{
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.04)'
+                  }} />
+                  <span className="relative text-xs font-light text-gray-600/80">{item.name}</span>
                 </div>
               </div>
             )}

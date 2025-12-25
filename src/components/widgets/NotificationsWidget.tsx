@@ -16,7 +16,7 @@ const typeIcons = {
 };
 
 const typeColors = {
-  info: 'text-cyan-600/70',
+  info: 'text-teal-600/70',
   reminder: 'text-amber-600/70',
   alert: 'text-rose-600/70',
 };
@@ -60,35 +60,38 @@ export function NotificationsWidget({ isAmbient }: WidgetComponentProps) {
       {notifications.map((notification, index) => {
         const Icon = typeIcons[notification.type];
         const colorClass = typeColors[notification.type];
-        const offset = index * 8;
+        const offset = index * 6;
         const zOffset = 3 - index;
 
         return (
           <div
             key={notification.id}
-            className={`notification-card w-64 group ${isAmbient ? '' : 'animate-slide-in'}`}
+            className={`relative w-64 group p-4 rounded-2xl transition-transform duration-300 hover:scale-[1.02] ${isAmbient ? '' : 'animate-slide-in'}`}
             style={{
               marginLeft: `${offset}px`,
               zIndex: zOffset,
               animationDelay: isAmbient ? '0ms' : `${index * 100}ms`,
             }}
           >
-            <div className="flex items-start gap-3">
+            <div className="absolute inset-0 bg-white/30 backdrop-blur-glass rounded-2xl border border-white/40" style={{
+              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 32px rgba(0, 0, 0, 0.06)'
+            }} />
+            <div className="relative flex items-start gap-3">
               <Icon className={`w-5 h-5 mt-0.5 ${colorClass}`} strokeWidth={1.5} />
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-gray-800/90">
+                <div className="text-sm font-medium text-gray-700/90">
                   {notification.title}
                 </div>
-                <div className="text-xs font-light text-gray-600/70 mt-0.5 truncate">
+                <div className="text-xs font-light text-gray-500/70 mt-0.5 truncate">
                   {notification.message}
                 </div>
               </div>
               {!isAmbient && (
                 <button
                   onClick={() => dismissNotification(notification.id)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-white/30 rounded"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-white/40 rounded-lg"
                 >
-                  <X className="w-3 h-3 text-gray-500/60" />
+                  <X className="w-3 h-3 text-gray-400/70" />
                 </button>
               )}
             </div>

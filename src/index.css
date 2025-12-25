@@ -17,14 +17,6 @@
   }
 
   :root {
-    --elevation-surface: 0 1px 3px rgba(0, 0, 0, 0.04);
-    --elevation-1: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-    --elevation-2: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
-    --elevation-3: 0 16px 40px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.04);
-    --elevation-4: 0 24px 56px rgba(0, 0, 0, 0.12), 0 6px 16px rgba(0, 0, 0, 0.04);
-    --elevation-floating: 0 32px 72px rgba(0, 0, 0, 0.16), 0 8px 24px rgba(0, 0, 0, 0.06);
-    --elevation-dragging: 0 40px 80px rgba(0, 0, 0, 0.20), 0 12px 32px rgba(0, 0, 0, 0.08);
-    --ambient-timeout: 90000;
     --transition-ambient: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
@@ -32,17 +24,17 @@
 @layer components {
   .glass-panel {
     @apply bg-white/30 backdrop-blur-glass border border-white/40 rounded-2xl;
-    box-shadow: var(--elevation-2), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 24px rgba(0, 0, 0, 0.06);
   }
 
   .glass-panel-light {
     @apply bg-white/20 backdrop-blur-glass border border-white/30 rounded-2xl;
-    box-shadow: var(--elevation-1), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.04);
   }
 
   .glass-panel-heavy {
     @apply bg-white/50 backdrop-blur-heavy border border-white/50 rounded-2xl;
-    box-shadow: var(--elevation-3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 12px 40px rgba(0, 0, 0, 0.08);
   }
 
   .elevation-surface {
@@ -72,8 +64,8 @@
   .widget-container {
     @apply absolute;
     transform: translate3d(0, 0, 0);
-    will-change: transform, box-shadow;
-    transition: transform 0.3s var(--transition-ambient), box-shadow 0.3s var(--transition-ambient);
+    will-change: transform;
+    transition: transform 0.3s var(--transition-ambient);
   }
 
   .widget-draggable {
@@ -95,7 +87,7 @@
   }
 
   .ambient-mode .widget-container {
-    @apply transition-none;
+    transition: transform 0.6s var(--transition-ambient);
   }
 
   .ambient-mode .widget-controls {
@@ -106,116 +98,9 @@
     @apply opacity-100 pointer-events-auto;
     animation: fadeIn 0.3s ease-out;
   }
-
-
-  .time-numeral {
-    @apply font-display font-extralight tracking-tight;
-    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  }
-
-  .orb-container {
-    background: radial-gradient(circle at 30% 30%, rgba(100, 181, 198, 0.8), rgba(78, 205, 196, 0.6));
-    box-shadow:
-      0 0 60px rgba(100, 181, 198, 0.4),
-      inset 0 -20px 40px rgba(0, 0, 0, 0.1),
-      inset 0 20px 40px rgba(255, 255, 255, 0.3);
-  }
-
-  .orb-inner-glow {
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), transparent 60%);
-  }
-
-  .status-dot {
-    @apply rounded-full;
-    box-shadow:
-      0 0 20px currentColor,
-      inset 0 1px 2px rgba(255, 255, 255, 0.4);
-  }
-
-  .news-strip {
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 5%,
-      black 95%,
-      transparent
-    );
-  }
-
-  .notification-card {
-    @apply glass-panel p-4;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-  }
-
-  .notification-card:hover {
-    @apply scale-[1.02];
-  }
-
-  .mode-indicator {
-    @apply fixed bottom-4 left-4 px-3 py-1.5 rounded-full text-xs font-light tracking-wide;
-    @apply bg-white/40 backdrop-blur-glass border border-white/30 text-gray-500/70;
-    @apply transition-all duration-300;
-  }
-
-  .add-widget-palette {
-    @apply fixed inset-0 bg-black/10 backdrop-blur-xs;
-    @apply flex items-center justify-center;
-  }
-
-  .add-widget-card {
-    @apply glass-panel-heavy p-3 cursor-pointer;
-    @apply transition-all duration-200;
-    @apply hover:scale-105 hover:shadow-elevation-3;
-  }
-
-  .scene-switcher {
-    @apply glass-panel-heavy p-2 flex gap-2;
-  }
-
-  .scene-button {
-    @apply px-4 py-2 rounded-xl text-sm font-light;
-    @apply transition-all duration-200;
-  }
-
-  .scene-button-active {
-    @apply bg-white/50 text-gray-800;
-  }
-
-  .scene-button-inactive {
-    @apply text-gray-500/70 hover:bg-white/30;
-  }
-
-  .calibration-grid {
-    @apply fixed inset-0 pointer-events-none;
-    background-image:
-      linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-    background-size: 100px 100px;
-  }
-
-  .safe-area-guide {
-    @apply fixed border-2 border-dashed border-amber-400/40 rounded-lg pointer-events-none;
-  }
 }
 
 @layer utilities {
-  .gradient-light-right {
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.1), transparent 60%);
-  }
-
-  .gradient-warm {
-    background: linear-gradient(135deg, #FFFBF7 0%, #FFFFFF 100%);
-  }
-
-  .gradient-ambient {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(250, 250, 250, 1) 100%);
-  }
-
-  .text-gradient-subtle {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(60, 60, 60, 0.7));
-  }
-
   .gpu-accelerated {
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
