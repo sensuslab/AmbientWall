@@ -18,6 +18,7 @@ interface UseDragOptions {
 export function useDrag({ initialX, initialY, onDragEnd, onDragStart }: UseDragOptions) {
   const [position, setPosition] = useState({ x: initialX, y: initialY });
   const [isDragging, setIsDragging] = useState(false);
+  const positionRef = useRef({ x: initialX, y: initialY });
   const dragState = useRef<DragState>({
     isDragging: false,
     startX: 0,
@@ -25,13 +26,22 @@ export function useDrag({ initialX, initialY, onDragEnd, onDragStart }: UseDragO
     offsetX: 0,
     offsetY: 0,
   });
+  const onDragEndRef = useRef(onDragEnd);
 
   useEffect(() => {
-    setPosition({ x: initialX, y: initialY });
-  }, [initialX, initialY]);
+    onDragEndRef.current = onDragEnd;
+  }, [onDragEnd]);
+
+  useEffect(() => {
+    if (!isDragging) {
+      setPosition({ x: initialX, y: initialY });
+      positionRef.current = { x: initialX, y: initialY };
+    }
+  }, [initialX, initialY, isDragging]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     dragState.current = {
       isDragging: true,
@@ -52,19 +62,20 @@ export function useDrag({ initialX, initialY, onDragEnd, onDragStart }: UseDragO
     const newX = ((e.clientX - dragState.current.offsetX) / viewportWidth) * 100;
     const newY = ((e.clientY - dragState.current.offsetY) / viewportHeight) * 100;
 
-    setPosition({
-      x: Math.max(0, Math.min(90, newX)),
-      y: Math.max(0, Math.min(90, newY)),
-    });
+    const clampedX = Math.max(0, Math.min(90, newX));
+    const clampedY = Math.max(0, Math.min(90, newY));
+
+    positionRef.current = { x: clampedX, y: clampedY };
+    setPosition({ x: clampedX, y: clampedY });
   }, []);
 
   const handleMouseUp = useCallback(() => {
     if (dragState.current.isDragging) {
       dragState.current.isDragging = false;
       setIsDragging(false);
-      onDragEnd?.(position.x, position.y);
+      onDragEndRef.current?.(positionRef.current.x, positionRef.current.y);
     }
-  }, [onDragEnd, position.x, position.y]);
+  }, []);
 
   useEffect(() => {
     if (isDragging) {

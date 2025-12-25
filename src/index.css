@@ -46,32 +46,26 @@
   }
 
   .elevation-surface {
-    box-shadow: var(--elevation-surface);
     z-index: 1;
   }
 
   .elevation-raised-1 {
-    box-shadow: var(--elevation-1);
     z-index: 10;
   }
 
   .elevation-raised-2 {
-    box-shadow: var(--elevation-2);
     z-index: 20;
   }
 
   .elevation-raised-3 {
-    box-shadow: var(--elevation-3);
     z-index: 30;
   }
 
   .elevation-raised-4 {
-    box-shadow: var(--elevation-4);
     z-index: 40;
   }
 
   .elevation-floating {
-    box-shadow: var(--elevation-floating);
     z-index: 100;
   }
 
@@ -92,7 +86,6 @@
 
   .widget-dragging {
     @apply scale-[1.02];
-    box-shadow: var(--elevation-dragging), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     z-index: 1000 !important;
     cursor: grabbing;
   }
@@ -114,9 +107,6 @@
     animation: fadeIn 0.3s ease-out;
   }
 
-  .edit-mode .widget-container {
-    @apply ring-2 ring-gray-200/50 ring-offset-4 ring-offset-transparent;
-  }
 
   .time-numeral {
     @apply font-display font-extralight tracking-tight;

@@ -62,15 +62,11 @@ export function WidgetWrapper({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {isEditMode && (
+      {isEditMode && isHovered && (
         <>
-          <div className="absolute -inset-3 border-2 border-dashed border-gray-300/40 rounded-3xl pointer-events-none transition-opacity duration-200" />
+          <div className="absolute -inset-3 border-2 border-dashed border-gray-300/30 rounded-3xl pointer-events-none animate-fade-in" />
 
-          <div
-            className={`widget-controls absolute -top-10 left-1/2 -translate-x-1/2 flex gap-1 transition-opacity duration-200 ${
-              isHovered ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
+          <div className="widget-controls absolute -top-10 left-1/2 -translate-x-1/2 flex gap-1 animate-fade-in">
             {onOpenSettings && (
               <button
                 onClick={(e) => {
