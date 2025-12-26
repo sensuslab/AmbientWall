@@ -67,6 +67,23 @@ export function VoiceAgentWidget({ isAmbient }: WidgetComponentProps) {
     }
   };
 
+  if (isConfigured === null) {
+    return (
+      <div className="relative w-64 rounded-2xl">
+        <div className="absolute inset-0 bg-white/25 backdrop-blur-glass rounded-2xl border border-white/40" style={{
+          boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 32px rgba(0, 0, 0, 0.06)'
+        }} />
+        <div className="relative p-6 text-center">
+          <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+            <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
+          </div>
+          <p className="text-sm font-light text-gray-600">Voice Agent</p>
+          <p className="text-xs font-light text-gray-400 mt-1">Checking...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (isConfigured === false) {
     return (
       <div className="relative w-64 rounded-2xl">
