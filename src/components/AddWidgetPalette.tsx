@@ -1,4 +1,4 @@
-import { X, Clock, Circle, Cloud, Newspaper, Bell, Activity, FileText, Image } from 'lucide-react';
+import { X, Clock, Circle, Cloud, Newspaper, Bell, Activity, FileText, Image, Mic } from 'lucide-react';
 import type { WidgetType } from '../types';
 
 interface AddWidgetPaletteProps {
@@ -13,6 +13,7 @@ const AVAILABLE_WIDGETS: { type: WidgetType; name: string; description: string; 
   { type: 'news', name: 'News', description: 'Live news rotation', icon: Newspaper },
   { type: 'grounded_brief', name: 'Daily Brief', description: 'News summary', icon: FileText },
   { type: 'photo', name: 'Photo', description: 'Photo slideshow', icon: Image },
+  { type: 'voice_agent', name: 'Voice Agent', description: 'AI voice assistant', icon: Mic },
   { type: 'notifications', name: 'Notifications', description: 'Floating alert cards', icon: Bell },
   { type: 'status_dots', name: 'Status Dots', description: 'Service indicators', icon: Activity },
 ];

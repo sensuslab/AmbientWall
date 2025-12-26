@@ -66,7 +66,10 @@ export function WidgetWrapper({
         <>
           <div className="absolute -inset-3 border-2 border-dashed border-gray-300/30 rounded-3xl pointer-events-none animate-fade-in" />
 
-          <div className="widget-controls absolute -top-10 left-1/2 -translate-x-1/2 flex gap-1 animate-fade-in">
+          <div
+            className="widget-controls absolute -top-10 left-1/2 -translate-x-1/2 flex gap-1 animate-fade-in"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
             {onOpenSettings && (
               <button
                 onClick={(e) => {
