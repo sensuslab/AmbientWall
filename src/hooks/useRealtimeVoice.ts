@@ -107,6 +107,10 @@ export function useRealtimeVoice() {
           type: 'session.update',
           session: {
             modalities: ['text', 'audio'],
+            instructions: 'You are Orbi, a helpful and friendly voice assistant for an ambient smart home dashboard. Keep your responses concise, warm, and conversational. You can help with weather updates, news summaries, reminders, and general questions. Respond naturally as if having a casual conversation.',
+            voice: 'verse',
+            input_audio_format: 'pcm16',
+            output_audio_format: 'pcm16',
             input_audio_transcription: {
               model: 'whisper-1',
             },

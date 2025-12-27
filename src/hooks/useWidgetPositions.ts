@@ -28,26 +28,20 @@ const ELEVATION_Z: Record<ElevationLevel, number> = {
   'floating': 100,
 };
 
-export function useWidgetPositions(sceneId?: string) {
+export function useWidgetPositions() {
   const [widgets, setWidgets] = useState<WidgetInstance[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadWidgets();
-  }, [sceneId]);
+  }, []);
 
   async function loadWidgets() {
     setLoading(true);
-    let query = supabase
+    const { data } = await supabase
       .from('widget_positions')
       .select('*')
       .order('z_index', { ascending: true });
-
-    if (sceneId) {
-      query = query.eq('scene_id', sceneId);
-    }
-
-    const { data } = await query;
 
     if (data && data.length > 0) {
       const mapped = data.map((d) => ({
@@ -57,19 +51,13 @@ export function useWidgetPositions(sceneId?: string) {
         height: d.height || 0,
       }));
       setWidgets(mapped);
-    } else if (!sceneId) {
+    } else {
       await initializeDefaultWidgets();
     }
     setLoading(false);
   }
 
   async function initializeDefaultWidgets() {
-    const { data: defaultScene } = await supabase
-      .from('scenes')
-      .select('id')
-      .eq('is_active', true)
-      .maybeSingle();
-
     const widgetTypes: WidgetType[] = ['time', 'orb', 'weather', 'news', 'notifications', 'status_dots'];
     const newWidgets = widgetTypes.map((type) => {
       const config = DEFAULT_WIDGETS[type] || DEFAULT_WIDGETS.time;
@@ -83,7 +71,7 @@ export function useWidgetPositions(sceneId?: string) {
         z_index: ELEVATION_Z[config.elevation],
         visible: true,
         settings: {},
-        scene_id: defaultScene?.id || null,
+        scene_id: null,
       };
     });
 
@@ -171,9 +159,8 @@ export function useWidgetPositions(sceneId?: string) {
       .eq('id', id);
   }, [widgets]);
 
-  const addWidget = useCallback(async (type: WidgetType, sceneIdOverride?: string) => {
+  const addWidget = useCallback(async (type: WidgetType) => {
     const config = DEFAULT_WIDGETS[type] || DEFAULT_WIDGETS.time;
-    const targetSceneId = sceneIdOverride || sceneId;
 
     const newWidget = {
       widget_type: type,
@@ -185,7 +172,7 @@ export function useWidgetPositions(sceneId?: string) {
       z_index: ELEVATION_Z[config.elevation] + widgets.length,
       visible: true,
       settings: {},
-      scene_id: targetSceneId || null,
+      scene_id: null,
     };
 
     const { data } = await supabase
@@ -199,7 +186,7 @@ export function useWidgetPositions(sceneId?: string) {
       return data;
     }
     return null;
-  }, [sceneId, widgets.length]);
+  }, [widgets.length]);
 
   const removeWidget = useCallback(async (id: string) => {
     await supabase

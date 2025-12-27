@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAppMode } from './hooks/useAppMode';
 import { useWidgetPositions } from './hooks/useWidgetPositions';
-import { useScenes } from './hooks/useScenes';
 import { WidgetWrapper } from './components/WidgetWrapper';
 import { EditModeControls } from './components/EditModeControls';
 import { AddWidgetPalette } from './components/AddWidgetPalette';
@@ -33,7 +32,6 @@ const widgetComponents: Record<string, React.ComponentType<WidgetComponentProps>
 function App() {
   const [showAddWidget, setShowAddWidget] = useState(false);
   const { mode, isAmbient, toggleEdit } = useAppMode();
-  const { scenes, activeScene, switchScene } = useScenes();
   const {
     widgets,
     loading,
@@ -42,7 +40,7 @@ function App() {
     bringToFront,
     addWidget,
     removeWidget,
-  } = useWidgetPositions(activeScene?.id);
+  } = useWidgetPositions();
 
   if (loading) {
     return (
@@ -52,15 +50,11 @@ function App() {
     );
   }
 
-  const handleAddWidget = async (type: WidgetType) => {
-    await addWidget(type, activeScene?.id);
-  };
-
   return (
     <div className={`min-h-screen overflow-hidden relative ${mode}-mode`}>
       <BackgroundLayer
-        mode={activeScene?.background_mode || 'white'}
-        value={activeScene?.background_value}
+        mode="white"
+        value={null}
       />
 
       {widgets.map((widget) => {
@@ -89,10 +83,7 @@ function App() {
         onToggleEdit={toggleEdit}
         onOpenAddWidget={() => setShowAddWidget(true)}
         widgets={widgets}
-        scenes={scenes}
-        activeScene={activeScene}
         onToggleVisibility={updateVisibility}
-        onSwitchScene={switchScene}
       />
 
       <ModeIndicator mode={mode} />
