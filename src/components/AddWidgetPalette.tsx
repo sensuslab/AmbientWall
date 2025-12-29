@@ -1,4 +1,4 @@
-import { X, Clock, Circle, Cloud, Newspaper, Bell, Activity, FileText, Image, Mic } from 'lucide-react';
+import { X, Clock, Circle, Cloud, Newspaper, Bell, Activity, FileText, Image, Mic, type LucideIcon } from 'lucide-react';
 import type { WidgetType } from '../types';
 
 interface AddWidgetPaletteProps {
@@ -6,7 +6,7 @@ interface AddWidgetPaletteProps {
   onAddWidget: (type: WidgetType) => void;
 }
 
-const AVAILABLE_WIDGETS: { type: WidgetType; name: string; description: string; icon: React.ComponentType<{ className?: string; strokeWidth?: number }> }[] = [
+const AVAILABLE_WIDGETS: { type: WidgetType; name: string; description: string; icon: LucideIcon }[] = [
   { type: 'time', name: 'Time', description: 'Sculptural time display', icon: Clock },
   { type: 'orb', name: 'Status Orb', description: 'Ambient status indicator', icon: Circle },
   { type: 'weather', name: 'Weather', description: 'Live weather data', icon: Cloud },

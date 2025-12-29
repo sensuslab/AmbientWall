@@ -164,7 +164,7 @@ export function PhotoWidget({ isAmbient, settings }: WidgetComponentProps) {
             <button
               onClick={() => setSource('pexels')}
               className={`px-3 py-1.5 rounded-lg text-xs transition-all ${
-                source === 'pexels'
+                (source as PhotoSource) === 'pexels'
                   ? 'bg-teal-500/20 text-teal-700'
                   : 'bg-white/30 text-gray-500 hover:bg-white/50'
               }`}

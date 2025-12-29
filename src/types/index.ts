@@ -63,6 +63,7 @@ export interface WidgetInstance {
   width: number;
   height: number;
   elevation: ElevationLevel;
+  z_index: number;
   visible: boolean;
   settings: Record<string, unknown>;
   scene_id: string | null;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { FileText, ChevronRight, Loader2 } from 'lucide-react';
 import { useLiveNews } from '../../hooks/useLiveNews';
 import type { WidgetComponentProps } from '../../types';
@@ -9,16 +9,25 @@ function extractKeyTopics(news: { title: string; snippet?: string }[]): string[]
 
   news.forEach(item => {
     const text = `${item.title} ${item.snippet || ''}`;
-    const words = text.split(/\s+/);
+    const words = text.split(/\s+/).filter(w => w.length > 0);
 
     for (let i = 0; i < words.length - 1; i++) {
-      const word1 = words[i].replace(/[^a-zA-Z]/g, '').toLowerCase();
-      const word2 = words[i + 1].replace(/[^a-zA-Z]/g, '').toLowerCase();
+      const word1Raw = words[i];
+      const word2Raw = words[i + 1];
+
+      if (!word1Raw || !word2Raw) continue;
+
+      const word1 = word1Raw.replace(/[^a-zA-Z]/g, '').toLowerCase();
+      const word2 = word2Raw.replace(/[^a-zA-Z]/g, '').toLowerCase();
+
+      const word1Char = word1Raw.replace(/[^a-zA-Z]/g, '')[0];
+      const word2Char = word2Raw.replace(/[^a-zA-Z]/g, '')[0];
 
       if (word1.length > 3 && word2.length > 3 &&
           !commonWords.includes(word1) && !commonWords.includes(word2) &&
-          word1[0] === word1[0].toUpperCase() || word2[0] === word2[0].toUpperCase()) {
-        const phrase = `${words[i]} ${words[i + 1]}`.replace(/[^a-zA-Z\s]/g, '');
+          word1Char && word2Char &&
+          (word1Char === word1Char.toUpperCase() || word2Char === word2Char.toUpperCase())) {
+        const phrase = `${word1Raw} ${word2Raw}`.replace(/[^a-zA-Z\s]/g, '');
         if (phrase.length > 6) topics.add(phrase);
       }
     }

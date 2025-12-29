@@ -50,6 +50,11 @@ function App() {
     );
   }
 
+  const handleAddWidget = async (type: WidgetType) => {
+    await addWidget(type);
+    setShowAddWidget(false);
+  };
+
   return (
     <div className={`min-h-screen overflow-hidden relative ${mode}-mode`}>
       <BackgroundLayer

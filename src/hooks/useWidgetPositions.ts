@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import type { WidgetInstance, WidgetType, ElevationLevel, ELEVATION_Z_INDEX } from '../types';
+import type { WidgetInstance, WidgetType, ElevationLevel } from '../types';
 
 interface DefaultWidgetConfig {
   x: number;
